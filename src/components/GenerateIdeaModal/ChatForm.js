@@ -1,14 +1,12 @@
 import { Col, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { GenerateIdeasContext } from "plugins/persona/context/GenerateIdeasContext";
 import { useContext, useState } from "react";
 import { FormInput } from "components"; //this is related to CP
 import { translateMultiple } from "../../helpers/translation";
 
 const ChatForm = (props) => {
-  const { topicsLoading, lastItem } = props;
+  const { topicsLoading, lastItem, onNewMessagesPosted } = props;
   const [isFilled, setIsFilled] = useState(false);
   const { ideaMessagesIndex } = useContext(GenerateIdeasContext);
   const translations = translateMultiple([
@@ -17,9 +15,7 @@ const ChatForm = (props) => {
     "form.enterYourResponse",
   ]);
 
-  const schemaResolver = yupResolver(yup.object().shape({}));
-
-  const methods = useForm({ resolver: schemaResolver });
+  const methods = useForm();
   const {
     handleSubmit,
     register,
@@ -28,7 +24,7 @@ const ChatForm = (props) => {
   } = methods;
 
   const handleValidMessageSubmit = ({ newMessage }) => {
-    props.onNewMessagesPosted(newMessage);
+    onNewMessagesPosted(newMessage);
     reset();
   };
 
