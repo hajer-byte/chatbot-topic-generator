@@ -1,10 +1,10 @@
-import GenerateTopic from "./components/views/Detail/Topics/GenerateTopic";
+import GenerateTopicIdeas from "./components/views/Detail/Topics/GenerateTopicIdeas";
 
 const personaRoutes = [
   {
     path: "/topic-finder",
     name: "GenerateIdea",
-    component: GenerateTopic,
+    component: GenerateTopicIdeas,
     exact: true,
   },
 ];

@@ -1,9 +1,9 @@
-import GenerateTopic from "./components/GenerateTopic";
+import GenerateTopicIdeas from "./components/GenerateTopicIdeas";
 
 function App() {
   return (
     <div className="App">
-      <GenerateTopic />
+      <GenerateTopicIdeas />
     </div>
   );
 }

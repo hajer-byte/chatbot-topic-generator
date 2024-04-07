@@ -9,7 +9,7 @@ import useUser from "plugins/account/hooks/user"; //this is related to CP
 import { GenerateIdeasContext } from "./context/GenerateIdeasContext";
 import SimpleBar from "simplebar-react";
 
-const GenerateTopic = () => {
+const GenerateTopicIdeas = () => {
   const { resetTopics, generateToken, handleLoadingChange } = useOpenAI();
   const { user = {} } = useUser(true);
   const { first_name } = user;
@@ -68,4 +68,4 @@ const GenerateTopic = () => {
   );
 };
 
-export default GenerateTopic;
+export default GenerateTopicIdeas;
