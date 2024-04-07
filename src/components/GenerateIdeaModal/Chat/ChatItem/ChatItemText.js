@@ -1,30 +1,35 @@
-import _ from 'lodash';
-import useOpenAI from 'plugins/openAI/hooks/useOpenAI';
-import { useContext, useEffect, useState } from 'react';
-import { Button, Spinner } from 'react-bootstrap';
-import { useDirectus } from 'react-directus';
-import { useHistory } from 'react-router-dom';
-import { translateMultiple } from 'helpers/translation';
-import { createOne } from 'lib/directus';
-import TopicsList from './ChatItemText/TopicsList';
-import CheckedOptions from './ChatItemText/options/CheckedOptions';
-import PersonaList from './ChatItemText/personas/Personalist';
-import StylesList from './ChatItemText/StylesList';
-import Persona from './ChatItemText/personas/Persona';
-import TopicOptionsList from './ChatItemText/options/TopicOptionsList';
-import { GenerateIdeasContext } from 'plugins/persona/context/GenerateIdeasContext';
-import { GenerateIdeaBodyContext } from 'plugins/persona/context/GenerateIdeaBodyContext';
-import { ChatContext } from 'plugins/persona/context/ChatContext';
-import { TopicsContext } from 'plugins/persona/context/TopicsContext';
+import { useContext, useEffect, useState } from "react";
+import { Button, Spinner } from "react-bootstrap";
+import { useDirectus } from "react-directus";
+import { useHistory } from "react-router-dom";
+import { translateMultiple } from "../../../helpers/translation";
+import { createOne } from "lib/directus"; //this is related to CP
+import TopicsList from "./ChatItemText/TopicsList";
+import CheckedOptions from "./ChatItemText/options/CheckedOptions";
+import PersonaList from "./ChatItemText/personas/Personalist";
+import StylesList from "./ChatItemText/StylesList";
+import Persona from "./ChatItemText/personas/Persona";
+import TopicOptionsList from "./ChatItemText/options/TopicOptionsList";
+import { GenerateIdeasContext } from "../../../context/GenerateIdeasContext";
+import { GenerateIdeaBodyContext } from "../../../context/GenerateIdeaBodyContext";
+import { ChatContext } from "../../../context/ChatContext";
+import { TopicsContext } from "../../../context/TopicsContext";
+import useOpenAI from "../../../openAI/hooks/useOpenAI";
+
+import _ from "lodash";
 
 const ChatItemText = () => {
-  const { handleResetChat, selectedPersona, ideaMessagesIndex } = useContext(GenerateIdeasContext);
-  const { personas, handleIncreaseIdeaMessagesIndex } = useContext(GenerateIdeaBodyContext);
+  const { handleResetChat, selectedPersona, ideaMessagesIndex } =
+    useContext(GenerateIdeasContext);
+  const { personas, handleIncreaseIdeaMessagesIndex } = useContext(
+    GenerateIdeaBodyContext
+  );
   const { itemNumber, lastItem, message } = useContext(ChatContext);
   const { refreshList, toggle } = useContext(TopicsContext);
-  const { userName, text, options, responseStyle, example, showPersonas } = message;
+  const { userName, text, options, responseStyle, example, showPersonas } =
+    message;
   const { setTopics, topics, topicsLoading } = useOpenAI();
-  const topicStyles = localStorage.getItem('topicStyles');
+  const topicStyles = localStorage.getItem("topicStyles");
   const { directus } = useDirectus();
 
   const [copied, setCopied] = useState(false);
@@ -37,12 +42,16 @@ const ChatItemText = () => {
         setCopied(false);
       }, 2000);
     } catch (error) {
-      console.log('copyTextError', error);
+      console.log("copyTextError", error);
     }
   };
 
   const history = useHistory();
-  const translations = translateMultiple(['ai.themes_loading', 'ui.apply', 'persona.copied']);
+  const translations = translateMultiple([
+    "ai.themes_loading",
+    "ui.apply",
+    "persona.copied",
+  ]);
 
   const handleSetTopic = (value) => {
     setTopics(value);
@@ -56,13 +65,13 @@ const ChatItemText = () => {
       updatedTopics
         .filter((topic) => topic.selected && !topic.created)
         .map(async (topic) => {
-          await createOne(directus, 'idea', {
+          await createOne(directus, "idea", {
             name: topic.topic,
             description: topic.description,
             persona: {
               id: selectedPersona,
             },
-            status: 'idea',
+            status: "idea",
           });
         })
     );
@@ -76,13 +85,16 @@ const ChatItemText = () => {
   };
 
   const handleStoreValues = (key, value) => {
-    localStorage.setItem(key, _.isEmpty(value) ? '' : JSON.stringify(value));
+    localStorage.setItem(key, _.isEmpty(value) ? "" : JSON.stringify(value));
   };
 
-  const selectedPersonaData = personas.find(({ id }) => Number(id) === Number(selectedPersona));
+  const selectedPersonaData = personas.find(
+    ({ id }) => Number(id) === Number(selectedPersona)
+  );
 
   useEffect(() => {
-    (itemNumber === 1 || ideaMessagesIndex === 3 || ideaMessagesIndex === 5) && handleIncreaseIdeaMessagesIndex();
+    (itemNumber === 1 || ideaMessagesIndex === 3 || ideaMessagesIndex === 5) &&
+      handleIncreaseIdeaMessagesIndex();
   }, [selectedPersona]);
 
   const showOptions = ideaMessagesIndex === 2;
@@ -99,10 +111,14 @@ const ChatItemText = () => {
               <span
                 className="mdi mdi-content-copy mx-1 position-relative"
                 onClick={handleCopyClick}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
               >
                 {/* Tooltip to indicate text copied */}
-                {copied && <div className="tooltip-copy">{translations['persona.copied']}</div>}
+                {copied && (
+                  <div className="tooltip-copy">
+                    {translations["persona.copied"]}
+                  </div>
+                )}
               </span>
             </i>
           )}
@@ -115,7 +131,11 @@ const ChatItemText = () => {
 
         {/* list all options */}
         {showOptions && options && (
-          <TopicOptionsList selectedPersona={selectedPersona} options={options} handleStoreValues={handleStoreValues} />
+          <TopicOptionsList
+            selectedPersona={selectedPersona}
+            options={options}
+            handleStoreValues={handleStoreValues}
+          />
         )}
         {/* the checked options */}
         {itemNumber === 3 && <CheckedOptions />}
@@ -123,13 +143,21 @@ const ChatItemText = () => {
         {/* list all styles */}
         {responseStyle && <StylesList handleStoreValues={handleStoreValues} />}
         {/* the checked style */}
-        {topicStyles && itemNumber === 5 && <p className="my-1 text-start">{JSON.parse(topicStyles).value}</p>}
+        {topicStyles && itemNumber === 5 && (
+          <p className="my-1 text-start">{JSON.parse(topicStyles).value}</p>
+        )}
 
         {/* list the generated topics  */}
         {lastItem && topicsLoading && (
           <>
-            <p>{translations['ai.themes_loading']}</p>
-            <Spinner as="span" size="sm" className="me-2" animation="border" role="status" />
+            <p>{translations["ai.themes_loading"]}</p>
+            <Spinner
+              as="span"
+              size="sm"
+              className="me-2"
+              animation="border"
+              role="status"
+            />
           </>
         )}
         {lastItem && topics.length > 0 && (
@@ -138,10 +166,13 @@ const ChatItemText = () => {
             <Button
               onClick={handleCreateIdeas}
               className="me-2"
-              disabled={topics.findIndex((topic) => topic.selected && !topic.created) < 0}
+              disabled={
+                topics.findIndex((topic) => topic.selected && !topic.created) <
+                0
+              }
               variant="success"
             >
-              {translations['ui.apply']}
+              {translations["ui.apply"]}
             </Button>
           </>
         )}

@@ -1,8 +1,7 @@
-import _ from 'lodash';
-import { useEffect, useRef, useContext } from 'react';
-import ChatItem from './Chat/ChatItem';
-import { GenerateIdeasContext } from '../../../../../context/GenerateIdeasContext';
-import { ChatContext } from '../../../../../context/ChatContext';
+import { useEffect, useRef, useContext } from "react";
+import ChatItem from "./Chat/ChatItem";
+import { GenerateIdeasContext } from "../context/GenerateIdeasContext";
+import { ChatContext } from "../context/ChatContext";
 
 const Chat = () => {
   const { ideaMessagesIndex, ideaMessages } = useContext(GenerateIdeasContext);
@@ -12,7 +11,7 @@ const Chat = () => {
 
   //scroll the chat window to the bottom
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   // trigger the scrollToBottom function whenever ideaMessages changes

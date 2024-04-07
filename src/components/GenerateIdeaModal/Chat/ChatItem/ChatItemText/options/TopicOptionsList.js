@@ -1,11 +1,11 @@
-import { translateMultiple } from 'helpers/translation';
-import { GenerateIdeasContext } from '../../../../../../../../../context/GenerateIdeasContext';
-import { useContext, useEffect, useState } from 'react';
-import { Button, Col, Collapse, Row } from 'react-bootstrap';
-import { GenerateIdeaBodyContext } from 'plugins/persona/context/GenerateIdeaBodyContext';
-import { ChatContext } from 'plugins/persona/context/ChatContext';
-import cx from 'classnames';
-import _ from 'lodash';
+import { useContext, useEffect, useState } from "react";
+import { Button, Col, Collapse, Row } from "react-bootstrap";
+import { GenerateIdeasContext } from "../../../../../context/GenerateIdeasContext";
+import { ChatContext } from "../../../../../context/ChatContext";
+import { GenerateIdeaBodyContext } from "../../../../../context/GenerateIdeaBodyContext";
+import { translateMultiple } from "../../../../../helpers/translation";
+import cx from "classnames";
+import _ from "lodash";
 
 const TopicOptionsList = ({ selectedPersona, handleStoreValues }) => {
   const [optionFields, setOptionsFields] = useState([{}]);
@@ -13,32 +13,49 @@ const TopicOptionsList = ({ selectedPersona, handleStoreValues }) => {
   const [checkbox, setCheckbox] = useState({});
   const [textareaValues, setTextareaValues] = useState({});
   const { ideaMessagesIndex } = useContext(GenerateIdeasContext);
-  const { handleIncreaseIdeaMessagesIndex, personas } = useContext(GenerateIdeaBodyContext);
+  const { handleIncreaseIdeaMessagesIndex, personas } = useContext(
+    GenerateIdeaBodyContext
+  );
   const { itemNumber } = useContext(ChatContext);
   const translations = translateMultiple([
-    'persona.individualNotes',
-    'persona.goals',
-    'persona.commonObjections',
-    'persona.challenges',
-    'ui.apply',
-    'persona.addText',
+    "persona.individualNotes",
+    "persona.goals",
+    "persona.commonObjections",
+    "persona.challenges",
+    "ui.apply",
+    "persona.addText",
   ]);
 
   const toggleTextAreaUser = (label) => {
-    setCollapseUserStates({ ...collapseStatesUser, [label]: !collapseStatesUser[label] });
+    setCollapseUserStates({
+      ...collapseStatesUser,
+      [label]: !collapseStatesUser[label],
+    });
   };
 
-  const removeHTMLTags = (text) => text?.replace(/<[^>]+>/g, '') || '';
+  const removeHTMLTags = (text) => text?.replace(/<[^>]+>/g, "") || "";
 
   const handleGenerateOptions = () => {
-    const selectedPersonaData = personas.find(({ id }) => Number(id) === Number(selectedPersona))?.data;
+    const selectedPersonaData = personas.find(
+      ({ id }) => Number(id) === Number(selectedPersona)
+    )?.data;
     if (selectedPersonaData) {
-      const { goals, individualNotes, challenges, objections } = JSON.parse(selectedPersonaData);
+      const { goals, individualNotes, challenges, objections } =
+        JSON.parse(selectedPersonaData);
       setOptionsFields([
-        { label: translations['persona.goals'], value: removeHTMLTags(goals) },
-        { label: translations['persona.individualNotes'], value: removeHTMLTags(individualNotes) },
-        { label: translations['persona.challenges'], value: removeHTMLTags(challenges) },
-        { label: translations['persona.commonObjections'], value: removeHTMLTags(objections) },
+        { label: translations["persona.goals"], value: removeHTMLTags(goals) },
+        {
+          label: translations["persona.individualNotes"],
+          value: removeHTMLTags(individualNotes),
+        },
+        {
+          label: translations["persona.challenges"],
+          value: removeHTMLTags(challenges),
+        },
+        {
+          label: translations["persona.commonObjections"],
+          value: removeHTMLTags(objections),
+        },
       ]);
     }
   };
@@ -55,7 +72,11 @@ const TopicOptionsList = ({ selectedPersona, handleStoreValues }) => {
 
   const handleTextChange = (label, value) => {
     setTextareaValues({ ...textareaValues, [label]: value });
-    setOptionsFields((prevFields) => prevFields.map((field) => (field.label === label ? { ...field, value } : field)));
+    setOptionsFields((prevFields) =>
+      prevFields.map((field) =>
+        field.label === label ? { ...field, value } : field
+      )
+    );
     if (checkbox[label]) {
       setCheckbox({ ...checkbox, [label]: value });
     }
@@ -71,18 +92,32 @@ const TopicOptionsList = ({ selectedPersona, handleStoreValues }) => {
                 <input
                   disabled={itemNumber !== 2 || !option?.value}
                   type="checkbox"
-                  onChange={(e) => handleCheckboxChange(option.label, e.target.checked ? option?.value : '')}
+                  onChange={(e) =>
+                    handleCheckboxChange(
+                      option.label,
+                      e.target.checked ? option?.value : ""
+                    )
+                  }
                   className="me-3"
                 />
                 {option.label}
               </label>
             </Col>
-            <Col md={2} className="d-flex align-items-center justify-content-end">
-              <Button onClick={() => toggleTextAreaUser(option.label)} variant="link" size="sm">
+            <Col
+              md={2}
+              className="d-flex align-items-center justify-content-end"
+            >
+              <Button
+                onClick={() => toggleTextAreaUser(option.label)}
+                variant="link"
+                size="sm"
+              >
                 <i
                   className={cx(
-                    { 'mdi mdi-chevron-up': collapseStatesUser[option.label] },
-                    { 'mdi mdi-chevron-down': !collapseStatesUser[option.label] }
+                    { "mdi mdi-chevron-up": collapseStatesUser[option.label] },
+                    {
+                      "mdi mdi-chevron-down": !collapseStatesUser[option.label],
+                    }
                   )}
                 />
               </Button>
@@ -94,21 +129,21 @@ const TopicOptionsList = ({ selectedPersona, handleStoreValues }) => {
               rows="5"
               value={textareaValues[option.label] || option.value}
               onChange={(e) => handleTextChange(option.label, e.target.value)}
-              placeholder={translations['persona.addText']}
+              placeholder={translations["persona.addText"]}
             />
           </Collapse>
         </div>
       ))}
       <Button
         onClick={() => {
-          handleStoreValues('topicOptions', checkbox);
+          handleStoreValues("topicOptions", checkbox);
           handleIncreaseIdeaMessagesIndex();
         }}
         className={`mt-2 mb-2 ms-2 btn btn-secondary float-left position-relative`}
         variant="success"
         disabled={ideaMessagesIndex !== 2 || _.isEmpty(checkbox)}
       >
-        {translations['ui.apply']}
+        {translations["ui.apply"]}
       </Button>
     </div>
   );

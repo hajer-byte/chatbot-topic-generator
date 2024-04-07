@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 export const translate = (key: string) => {
   const { t } = useTranslation();
@@ -9,11 +9,10 @@ export const translateMultiple = (keys: string[]) => {
   const translations = {};
 
   keys.forEach((key) => {
-    translations[key] = t(key) || key;
+    translations[key] = t(key) || key;
   });
 
   return translations;
 };
-
 
 export default translate;

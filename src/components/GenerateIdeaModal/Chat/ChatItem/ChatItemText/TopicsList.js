@@ -1,4 +1,4 @@
-import { Col, Row, Form } from 'react-bootstrap';
+import { Col, Row, Form } from "react-bootstrap";
 
 const TopicsList = ({ topics, handleSetTopic }) => {
   const handleCheckboxClick = (index) => {
@@ -15,7 +15,8 @@ const TopicsList = ({ topics, handleSetTopic }) => {
         <Row>
           <Col md={9}>
             <label htmlFor={`checklist-${index}`}>
-              <strong>{topic.topic}</strong> <span style={{ fontWeight: '400' }}>{topic.description}</span>
+              <strong>{topic.topic}</strong>{" "}
+              <span style={{ fontWeight: "400" }}>{topic.description}</span>
             </label>
           </Col>
           <Col md={3} className="d-flex">

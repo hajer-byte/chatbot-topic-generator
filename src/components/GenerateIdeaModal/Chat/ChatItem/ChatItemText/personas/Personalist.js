@@ -1,13 +1,16 @@
-import { Col, Row, Form } from 'react-bootstrap';
-import { translateMultiple } from 'helpers/translation';
-import { useContext } from 'react';
-import { GenerateIdeasContext } from 'plugins/persona/context/GenerateIdeasContext';
-import { GenerateIdeaBodyContext } from 'plugins/persona/context/GenerateIdeaBodyContext';
-import Persona from './Persona';
+import { useContext } from "react";
+import { Col, Form, Row } from "react-bootstrap";
+import { GenerateIdeaBodyContext } from "../../../../../context/GenerateIdeaBodyContext";
+import { GenerateIdeasContext } from "../../../../../context/GenerateIdeasContext";
+import { translateMultiple } from "../../../../../helpers/translation";
+import Persona from "./Persona";
 
 const PersonaList = ({ selectedPersona }) => {
-  const { setSelectedPersona, ideaMessagesIndex } = useContext(GenerateIdeasContext);
-  const { personas, handleIncreaseIdeaMessagesIndex } = useContext(GenerateIdeaBodyContext);
+  const { setSelectedPersona, ideaMessagesIndex } =
+    useContext(GenerateIdeasContext);
+  const { personas, handleIncreaseIdeaMessagesIndex } = useContext(
+    GenerateIdeaBodyContext
+  );
 
   const handleSelectedPersona = (value) => {
     if (selectedPersona === null) {
@@ -16,10 +19,11 @@ const PersonaList = ({ selectedPersona }) => {
     setSelectedPersona(value);
   };
 
-  const translations = translateMultiple(['idea.noPersona']);
+  const translations = translateMultiple(["idea.noPersona"]);
 
   if (ideaMessagesIndex !== 0) return <></>;
-  if (personas?.length === 0) return <a href="/persona/add">{translations['idea.noPersona']} </a>;
+  if (personas?.length === 0)
+    return <a href="/persona/add">{translations["idea.noPersona"]} </a>;
   return (
     <div className="mb-3">
       {personas?.map((persona, index) => {
@@ -28,13 +32,16 @@ const PersonaList = ({ selectedPersona }) => {
             key={index}
             className="persona-selection"
             style={{
-              marginLeft: '-1em',
-              marginRight: '-1em',
+              marginLeft: "-1em",
+              marginRight: "-1em",
             }}
           >
             <div className="form-check mt-1 ps-2 pe-2">
-              <Row style={{ minHeight: '60px' }}>
-                <Col md={2} className="d-flex align-items-center justify-content-center">
+              <Row style={{ minHeight: "60px" }}>
+                <Col
+                  md={2}
+                  className="d-flex align-items-center justify-content-center"
+                >
                   <Form.Check
                     id={`personaList-${index}`}
                     checked={persona.id === selectedPersona}

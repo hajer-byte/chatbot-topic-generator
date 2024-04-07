@@ -1,19 +1,25 @@
-import { useContext, useEffect, useState } from 'react';
-import Chat from './Chat';
-import ChatForm from './ChatForm';
-import { useDirectus } from 'react-directus';
-import { useSelector } from 'react-redux';
-import { GenerateIdeasContext } from '../context/GenerateIdeasContext';
-import { GenerateIdeaBodyContext } from '../context/GenerateIdeaBodyContext';
-import useOpenAI from 'plugins/openAI/hooks/useOpenAI'; //this is not functional for now 
-import { useAuth } from 'hooks';
-import { translateMultiple } from 'helpers/translation';
+import { useContext, useEffect, useState } from "react";
+import Chat from "./Chat";
+import ChatForm from "./ChatForm";
+import { useDirectus } from "react-directus";
+import { useSelector } from "react-redux";
+import { GenerateIdeasContext } from "../context/GenerateIdeasContext";
+import { GenerateIdeaBodyContext } from "../context/GenerateIdeaBodyContext";
+import useOpenAI from "../openAI/hooks/useOpenAI";
+import { useAuth } from "hooks";
+import { translateMultiple } from "../helpers/translation";
 
 const GenerateIdeaBody = ({ handleIdeaMessages, handleIdeaMessagesIndex }) => {
-  const translations = translateMultiple(['idea.generateThemes', 'ai.restartChat', 'ai.cp_types', 'ai.no_tokens']);
-  const { selectedPersona, ideaMessagesIndex, ideaMessages } = useContext(GenerateIdeasContext);
+  const translations = translateMultiple([
+    "idea.generateThemes",
+    "ai.restartChat",
+    "ai.cp_types",
+    "ai.no_tokens",
+  ]);
+  const { selectedPersona, ideaMessagesIndex, ideaMessages } =
+    useContext(GenerateIdeasContext);
   const { generateTopics, topicsLoading } = useOpenAI();
-  const { remainingTokens } = useSelector((state) => state['openAIReducer']);
+  const { remainingTokens } = useSelector((state) => state["openAIReducer"]);
   const { org } = useAuth();
   const { directus } = useDirectus();
   const [isTyping, setIsTyping] = useState(false);
@@ -41,20 +47,31 @@ const GenerateIdeaBody = ({ handleIdeaMessages, handleIdeaMessagesIndex }) => {
   };
 
   const handleGenerateTopics = async () => {
-    const options = localStorage.getItem('topicOptions');
-    const style = localStorage.getItem('topicStyles');
-    await generateTopics(selectedPersona, orgId, 1, ideaMessages[7].text, ideaMessages[9].text, options, style);
+    const options = localStorage.getItem("topicOptions");
+    const style = localStorage.getItem("topicStyles");
+    await generateTopics(
+      selectedPersona,
+      orgId,
+      1,
+      ideaMessages[7].text,
+      ideaMessages[9].text,
+      options,
+      style
+    );
   };
 
   const handleGetPersonas = async () => {
-    const fetchParams = { sort: '-id' };
+    const fetchParams = { sort: "-id" };
     try {
       const { data } = await directus
-        .items('persona')
-        .readByQuery({ ...fetchParams, fields: ['id', 'name', 'image.filename_disk', 'data'] });
+        .items("persona")
+        .readByQuery({
+          ...fetchParams,
+          fields: ["id", "name", "image.filename_disk", "data"],
+        });
       setPersonas(data);
     } catch (error) {
-      console.error('persona fetch error', error);
+      console.error("persona fetch error", error);
     }
   };
 
@@ -62,7 +79,7 @@ const GenerateIdeaBody = ({ handleIdeaMessages, handleIdeaMessagesIndex }) => {
     if (ideaMessagesIndex < ideaMessages?.length) {
       const updatedIdeaMessages = [...ideaMessages];
       for (let i = 0; i <= ideaMessagesIndex; i++) {
-        if (ideaMessages[i].postedOn === '') {
+        if (ideaMessages[i].postedOn === "") {
           updatedIdeaMessages[i].postedOn = Math.floor(Date.now() / 1000);
         }
         if (i === 0) {
@@ -76,18 +93,26 @@ const GenerateIdeaBody = ({ handleIdeaMessages, handleIdeaMessagesIndex }) => {
     }
   }, [ideaMessagesIndex]);
 
-  if (remainingTokens < 0) return <div>{translations['ai.no_tokens']}</div>;
+  if (remainingTokens < 0) return <div>{translations["ai.no_tokens"]}</div>;
 
   return (
     <div className="chat-conversation">
       {/* chat messages */}
-      <GenerateIdeaBodyContext.Provider value={{ handleGenerateTopics, personas, handleIncreaseIdeaMessagesIndex }}>
+      <GenerateIdeaBodyContext.Provider
+        value={{
+          handleGenerateTopics,
+          personas,
+          handleIncreaseIdeaMessagesIndex,
+        }}
+      >
         <Chat />
       </GenerateIdeaBodyContext.Provider>
 
       {/* cp typing message */}
-      {isTyping && ideaMessages[ideaMessagesIndex + 1]?.identifier === 'cp' && (
-        <small className="typing-message m-3">{translations['ai.cp_types']}</small>
+      {isTyping && ideaMessages[ideaMessagesIndex + 1]?.identifier === "cp" && (
+        <small className="typing-message m-3">
+          {translations["ai.cp_types"]}
+        </small>
       )}
 
       {/* chat form */}

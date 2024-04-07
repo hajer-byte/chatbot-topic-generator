@@ -1,13 +1,16 @@
-import { Col, Row } from 'react-bootstrap';
-import { translateMultiple } from '../helpers/translation';
+import { Col, Row } from "react-bootstrap";
+import { translateMultiple } from "../helpers/translation";
 
 const GenerateIdeaHeader = ({ ideaMessagesIndex, handleResetChat }) => {
-  const translations = translateMultiple(['idea.generateThemes', 'ai.restartChat']);
+  const translations = translateMultiple([
+    "idea.generateThemes",
+    "ai.restartChat",
+  ]);
 
   return (
     <Row className="my-3 mx-2">
       <Col>
-        <h4 className="modal-title">{translations['idea.generateThemes']}</h4>
+        <h4 className="modal-title">{translations["idea.generateThemes"]}</h4>
       </Col>
       <Col className="col-auto">
         <button

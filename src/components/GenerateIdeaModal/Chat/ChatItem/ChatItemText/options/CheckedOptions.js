@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Button, Col, Collapse, Row } from 'react-bootstrap';
-import cx from 'classnames';
+import { useState } from "react";
+import { Button, Col, Collapse, Row } from "react-bootstrap";
+import cx from "classnames";
 
 const CheckedOptions = () => {
   const [collapseStates, setCollapseStates] = useState({});
-  const topicOptions = localStorage.getItem('topicOptions') || '';
+  const topicOptions = localStorage.getItem("topicOptions") || "";
 
   const toggleTextArea = (label) => {
     setCollapseStates({ ...collapseStates, [label]: !collapseStates[label] });
@@ -21,19 +21,28 @@ const CheckedOptions = () => {
               <Col md={10} className="d-flex align-items-center">
                 <p>{option}</p>
               </Col>
-              <Col md={2} className="d-flex align-items-center justify-content-end">
-                <Button onClick={() => toggleTextArea(option)} variant="link" size="sm">
+              <Col
+                md={2}
+                className="d-flex align-items-center justify-content-end"
+              >
+                <Button
+                  onClick={() => toggleTextArea(option)}
+                  variant="link"
+                  size="sm"
+                >
                   <i
                     className={cx(
-                      { 'mdi mdi-chevron-up': collapseStates[option] },
-                      { 'mdi mdi-chevron-down': !collapseStates[option] }
+                      { "mdi mdi-chevron-up": collapseStates[option] },
+                      { "mdi mdi-chevron-down": !collapseStates[option] }
                     )}
                   />
                 </Button>
               </Col>
             </Row>
             <Collapse in={collapseStates[option]}>
-              <p className="text-start p-1">{JSON.parse(topicOptions)[option]}</p>
+              <p className="text-start p-1">
+                {JSON.parse(topicOptions)[option]}
+              </p>
             </Collapse>
           </div>
         );
